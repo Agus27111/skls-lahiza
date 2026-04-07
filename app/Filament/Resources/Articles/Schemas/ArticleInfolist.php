@@ -20,7 +20,8 @@ class ArticleInfolist
                 TextEntry::make('content')
                     ->columnSpanFull(),
                 TextEntry::make('category'),
-                ImageEntry::make('image')
+                ImageEntry::make('image_url')
+                    ->label('Gambar')
                     ->placeholder('-'),
                 TextEntry::make('teacher.name')
                     ->label('Teacher')

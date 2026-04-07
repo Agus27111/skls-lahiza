@@ -22,7 +22,8 @@ class TeacherInfolist
                     ->columnSpanFull(),
                 TextEntry::make('position')
                     ->columnSpanFull(),
-                ImageEntry::make('image')
+                ImageEntry::make('image_url')
+                    ->label('Foto')
                     ->placeholder('-'),
                 TextEntry::make('schoolUnit.name')
                     ->label('School unit')

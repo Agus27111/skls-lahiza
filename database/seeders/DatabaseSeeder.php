@@ -8,6 +8,7 @@ use App\Models\PpdbRegistration;
 use App\Models\SchoolUnit;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\VideoDocumentation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -29,8 +30,27 @@ class DatabaseSeeder extends Seeder
         // Create additional users
         User::factory(5)->create();
 
-        // Create school units
-        $schoolUnits = SchoolUnit::factory(3)->create();
+        $this->call(HeroSectionSeeder::class);
+
+        // Create school units with specific names for PPDB form
+        $schoolUnits = collect([
+            SchoolUnit::create([
+                'name' => 'TK Lahiza',
+                'slug' => 'tk-lahiza',
+                'description' => 'Taman Kanak-Kanak Lahiza Sunnah mengedepankan pendidikan anak usia dini sesuai fitrah dengan pendekatan natural learning.',
+                'philosophy' => 'Mendidik anak-anak dengan pendekatan yang sesuai dengan fitrahnya, dekat dengan alam, dan mengembangkan karakter nabawiyah.',
+                'max_quota' => 30,
+                'is_active' => true,
+            ]),
+            SchoolUnit::create([
+                'name' => 'SD Lahiza',
+                'slug' => 'sd-lahiza',
+                'description' => 'Sekolah Dasar Lahiza Sunnah mengintegrasikan pembelajaran akademik dengan pengalaman praktis di alam dan pertanian.',
+                'philosophy' => 'Membangun generasi yang berpengetahuan, berkarakter, dan dekat dengan alam serta pemahaman nilai-nilai agama.',
+                'max_quota' => 40,
+                'is_active' => true,
+            ]),
+        ]);
 
         // For each school unit, create related data
         $schoolUnits->each(function (SchoolUnit $schoolUnit) {
@@ -56,5 +76,8 @@ class DatabaseSeeder extends Seeder
                 ->for($schoolUnit)
                 ->create();
         });
+
+        // Create video documentations
+        VideoDocumentation::factory(8)->create();
     }
 }

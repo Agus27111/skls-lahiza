@@ -2,64 +2,85 @@
 <html lang="id" class="scroll-smooth">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sekolah Lahiza Sunnah - Mendidik Sesuai Fitrah</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@300;400;700&display=swap"
-        rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#15803d',
-                        /* Hijau Daun (Green 700) */
-                        primaryLight: '#22c55e',
-                        /* Hijau Muda (Green 500) */
-                        secondary: '#d97706',
-                        /* Kuning Hangat (Amber 600) */
-                        earth: '#78350f',
-                        /* Cokelat Tanah (Amber 900) */
-                        sand: '#fef3c7',
-                        /* Pasir/Krem (Amber 50) */
-                        leaf: '#f0fdf4',
-                        /* Hijau Sangat Pudar (Green 50) */
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Merriweather', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    @include('partials.head')
     <style>
         /* CSS Khusus untuk Fitur Cetak Invoice */
         @media print {
-            body * {
-                visibility: hidden;
+
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100%;
+                height: auto;
             }
 
-            #invoice-content,
-            #invoice-content * {
-                visibility: visible;
+            body {
+                background: white !important;
+            }
+
+            /* Hide everything except invoice modal */
+            body>*:not(#invoice-modal) {
+                display: none !important;
+            }
+
+            #invoice-modal {
+                display: block !important;
+                position: static !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
+                z-index: 1 !important;
+            }
+
+            /* Hide backdrop (first div child) */
+            #invoice-modal>div:first-child {
+                display: none !important;
+            }
+
+            /* Hide scrollable wrapper but show invoice-content inside */
+            #invoice-modal>div:last-child {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
             }
 
             #invoice-content {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                margin: 0;
-                padding: 20px;
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 40px !important;
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
                 box-shadow: none !important;
+                animation: none !important;
+                rounded: 0 !important;
+            }
+
+            #invoice-content * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             .no-print {
                 display: none !important;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
         }
 
@@ -72,47 +93,12 @@
 
 <body class="bg-stone-50 text-stone-800 font-sans antialiased">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-40 transition-all no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="leaf" class="h-8 w-8 text-primary"></i>
-                    <span class="font-serif font-bold text-2xl text-earth">Lahiza Sunnah</span>
-                </div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#beranda" class="text-stone-600 hover:text-primary transition font-medium">Beranda</a>
-                    <a href="#tentang" class="text-stone-600 hover:text-primary transition font-medium">Tentang Kami</a>
-                    <a href="#unit" class="text-stone-600 hover:text-primary transition font-medium">Unit Sekolah</a>
-                    <a href="#galeri" class="text-stone-600 hover:text-primary transition font-medium">Galeri</a>
-                    <a href="#informasi" class="text-stone-600 hover:text-primary transition font-medium">Informasi</a>
-                </div>
-                <div class="hidden md:flex">
-                    <a href="#ppdb"
-                        class="bg-primary hover:bg-earth text-white px-6 py-2.5 rounded-full font-medium transition shadow-lg shadow-primary/30 flex items-center gap-2">
-                        <i data-lucide="clipboard-signature" class="w-5 h-5"></i>
-                        Daftar PPDB
-                    </a>
-                </div>
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
-                    <button class="text-stone-600 hover:text-primary focus:outline-none"
-                        onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                        <i data-lucide="menu" class="h-6 w-6"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-stone-100">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#beranda" class="block px-3 py-2 text-stone-600 font-medium">Beranda</a>
-                <a href="#tentang" class="block px-3 py-2 text-stone-600 font-medium">Tentang Kami</a>
-                <a href="#unit" class="block px-3 py-2 text-stone-600 font-medium">Unit Sekolah</a>
-                <a href="#ppdb" class="block px-3 py-2 text-primary font-bold">Daftar PPDB</a>
-            </div>
-        </div>
-    </nav>
+    @include('partials.navbar')
+    @include('partials.whatsapp-button')
+
+    @php
+        $hero = $heroSection ?? null;
+    @endphp
 
     <!-- Hero Section -->
     <section id="beranda" class="relative pt-20 pb-16 md:pt-32 md:pb-24 flex items-center min-h-[90vh] hero-pattern">
@@ -121,24 +107,24 @@
                 <div class="text-center md:text-left">
                     <span
                         class="inline-block py-1 px-3 rounded-full bg-sand text-secondary font-semibold text-sm mb-4 border border-secondary/20">
-                        Penerimaan Peserta Didik Baru 2026/2027
+                        {{ $hero?->eyebrow_text ?? 'Penerimaan Peserta Didik Baru 2026/2027' }}
                     </span>
                     <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-earth leading-tight mb-6">
-                        Mendidik Sesuai <span class="text-primary">Fitrah</span>,<br>Tumbuh Bersama Alam.
+                        {{ $hero?->title_prefix ?? 'Mendidik Sesuai' }} <span
+                            class="text-primary">{{ $hero?->title_highlight ?? 'Fitrah' }}</span>,<br>{{ $hero?->title_suffix ?? 'Tumbuh Bersama Alam.' }}
                     </h1>
                     <p class="text-lg text-stone-600 mb-8 max-w-lg mx-auto md:mx-0">
-                        Sekolah berbasis Karakter Nabawiyah yang menjadikan ketahanan pangan, pertanian, dan peternakan
-                        sebagai laboratorium kehidupan utama anak-anak kita.
+                        {{ $hero?->description ?? 'Sekolah berbasis Karakter Nabawiyah yang menjadikan ketahanan pangan, pertanian, dan peternakan sebagai laboratorium kehidupan utama anak-anak kita.' }}
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                        <a href="#ppdb"
+                        <a href="{{ $hero?->primary_button_url ?? '#ppdb' }}"
                             class="bg-primary hover:bg-earth text-white px-8 py-3.5 rounded-full font-medium transition shadow-xl shadow-primary/20 text-center">
-                            Mulai Pendaftaran
+                            {{ $hero?->primary_button_label ?? 'Mulai Pendaftaran' }}
                         </a>
-                        <a href="#tentang"
+                        <a href="{{ $hero?->secondary_button_url ?? '#tentang' }}"
                             class="bg-white hover:bg-stone-50 text-earth border-2 border-earth/10 px-8 py-3.5 rounded-full font-medium transition text-center flex justify-center items-center gap-2">
                             <i data-lucide="play-circle" class="w-5 h-5 text-secondary"></i>
-                            Kenali Filosofi Kami
+                            {{ $hero?->secondary_button_label ?? 'Kenali Filosofi Kami' }}
                         </a>
                     </div>
                 </div>
@@ -146,8 +132,8 @@
                     <div
                         class="absolute inset-0 bg-primary/10 rounded-full blur-3xl transform translate-x-10 translate-y-10">
                     </div>
-                    <img src="https://images.unsplash.com/photo-1594498653385-d5172c532c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                        alt="Anak-anak di alam"
+                    <img src="{{ $hero?->image_url ?? 'https://images.unsplash.com/photo-1594498653385-d5172c532c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80' }}"
+                        alt="{{ $hero?->image_alt ?? 'Anak-anak di alam' }}"
                         class="rounded-t-[100px] rounded-b-3xl shadow-2xl relative z-10 border-8 border-white object-cover h-[500px] w-full">
 
                     <!-- Floating Badge -->
@@ -157,8 +143,10 @@
                             <i data-lucide="sprout" class="w-8 h-8"></i>
                         </div>
                         <div>
-                            <p class="text-xs text-stone-500 font-medium">Pembelajaran Aktif</p>
-                            <p class="font-bold text-earth">100% Berbasis Alam</p>
+                            <p class="text-xs text-stone-500 font-medium">
+                                {{ $hero?->floating_badge_label ?? 'Pembelajaran Aktif' }}
+                            </p>
+                            <p class="font-bold text-earth">{{ $hero?->floating_badge_text ?? '100% Berbasis Alam' }}</p>
                         </div>
                     </div>
                 </div>
@@ -229,8 +217,7 @@
     <section id="unit" class="py-20 bg-leaf relative overflow-hidden">
         <!-- Decorative elements -->
         <div class="absolute top-0 right-0 opacity-10">
-            <svg width="400" height="400" viewBox="0 0 24 24" fill="none" stroke="#15803d"
-                stroke-width="1">
+            <svg width="400" height="400" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="1">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
         </div>
@@ -280,69 +267,49 @@
     <!-- Galeri & Guru -->
     <section id="galeri" class="py-20 bg-stone-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Asatidz (Guru) -->
             <div class="flex flex-col md:flex-row justify-between items-end mb-12">
                 <div>
-                    <h2 class="font-serif text-3xl font-bold text-earth mb-2">Jejak Langkah di Alam</h2>
-                    <p class="text-stone-600">Dokumentasi kegiatan keseharian siswa Lahiza Sunnah.</p>
+                    <h2 class="font-serif text-3xl font-bold text-earth mb-2">Murobbi & Fasilitator Kami</h2>
+                    <p class="text-stone-600">Tim profesional yang berkomitmen mengembangkan potensi setiap anak</p>
                 </div>
-                <a href="#"
+                <a href="{{ route('about') }}"
                     class="text-primary font-medium hover:underline mt-4 md:mt-0 flex items-center gap-1">
-                    Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Lihat Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </div>
-
-            <!-- Galeri Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
-                <div class="aspect-square rounded-2xl overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1589923158776-cb4485d99fd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="Galeri 1"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                </div>
-                <div class="aspect-square rounded-2xl overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1525008985172-e01662c1605b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="Galeri 2"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                </div>
-                <div class="aspect-square rounded-2xl overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1594498653385-d5172c532c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="Galeri 3"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                </div>
-                <div class="aspect-square rounded-2xl overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1628104550873-1bb3cb0179a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="Galeri 4"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                </div>
-            </div>
-
-            <!-- Asatidz (Guru) -->
-            <div class="text-center mb-12">
-                <h2 class="font-serif text-3xl font-bold text-earth mb-4">Murobbi & Fasilitator Kami</h2>
-                <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
-            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                @forelse($teachers as $teacher)
+                @forelse($teachers->take(4) as $teacher)
                     <!-- Guru Card -->
-                    <div class="text-center">
+                    <div class="text-center group cursor-pointer">
                         <div
-                            class="w-32 h-32 mx-auto rounded-full bg-sand border-4 border-white shadow-lg overflow-hidden mb-4">
-                            @if ($teacher->image)
-                                <img src="{{ $teacher->image }}" alt="{{ $teacher->name }}"
-                                    class="w-full h-full object-cover">
+                            class="w-32 h-32 mx-auto rounded-full bg-sand border-4 border-white shadow-lg overflow-hidden mb-4 group-hover:shadow-xl transition">
+                            @if ($teacher->image_url)
+                                <img src="{{ $teacher->image_url }}" alt="{{ $teacher->name }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
                             @else
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($teacher->name) }}&background=78350f&color=fff&size=150"
                                     alt="{{ $teacher->name }}" class="w-full h-full object-cover">
                             @endif
                         </div>
-                        <h4 class="font-bold text-earth text-lg">{{ $teacher->name }}</h4>
+                        <h4 class="font-bold text-earth text-lg group-hover:text-primary transition">
+                            {{ $teacher->name }}</h4>
                         <p class="text-primary text-sm font-medium">{{ $teacher->position }}</p>
                     </div>
                 @empty
-                    <div class="col-span-4 text-center py-8 px-6 bg-stone-50 rounded-2xl">
+                    <div class="col-span-4 text-center py-8 px-6 bg-white rounded-2xl">
                         <p class="text-stone-600">Data guru tidak tersedia</p>
                     </div>
                 @endforelse
             </div>
+            @if ($teachers->count() > 4)
+                <div class="text-center mt-12">
+                    <a href="{{ route('about') }}"
+                        class="inline-block bg-primary hover:bg-earth text-white px-8 py-3.5 rounded-full font-medium transition shadow-lg">
+                        Lihat Semua Murobbi Kami
+                    </a>
+                </div>
+            @endif
         </div>
     </section>
 
@@ -359,10 +326,11 @@
                     <div class="space-y-6">
                         @forelse($articles as $article)
                             <!-- Artikel -->
-                            <div class="flex flex-col sm:flex-row gap-6 group cursor-pointer">
+                            <a href="{{ route('articles.show', $article) }}"
+                                class="flex flex-col sm:flex-row gap-6 group cursor-pointer hover:opacity-80 transition">
                                 <div class="w-full sm:w-48 h-32 rounded-xl overflow-hidden shrink-0">
-                                    @if ($article->image)
-                                        <img src="{{ $article->image }}" alt="{{ $article->title }}"
+                                    @if ($article->image_url)
+                                        <img src="{{ $article->image_url }}" alt="{{ $article->title }}"
                                             class="w-full h-full object-cover group-hover:scale-105 transition">
                                     @else
                                         <div
@@ -381,7 +349,7 @@
                                     <span
                                         class="text-xs text-stone-400 mt-2 block">{{ $article->published_at->format('d M Y') }}</span>
                                 </div>
-                            </div>
+                            </a>
                         @empty
                             <div class="text-center py-8 px-6 bg-stone-50 rounded-2xl">
                                 <p class="text-stone-600">Belum ada artikel yang dipublikasikan</p>
@@ -414,6 +382,128 @@
         </div>
     </section>
 
+    <!-- Dokumentasi Video YouTube -->
+    <section id="dokumentasi-video" class="py-20 bg-white border-t border-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="font-serif text-3xl font-bold text-earth mb-2">Jejak Langkah di Alam</h2>
+                    <p class="text-stone-600">Dokumentasi kegiatan keseharian siswa Lahiza Sunnah.</p>
+                </div>
+                <a href="/jejak-langkah"
+                    class="text-primary font-medium hover:underline mt-4 md:mt-0 flex items-center gap-1">
+                    Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Galeri Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
+                @forelse($photos as $photo)
+                    <div class="aspect-square rounded-2xl overflow-hidden group cursor-pointer"
+                        onclick="openPhotoModal(@js($photo->image_url), @js($photo->title))">
+                        <img src="{{ $photo->image_url }}" alt="{{ $photo->title }}"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition"></div>
+                    </div>
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-stone-600">Belum ada dokumentasi foto</p>
+                    </div>
+                @endforelse
+            </div>
+            <div class="text-center mb-16">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <i data-lucide="play-circle" class="w-8 h-8 text-secondary"></i>
+                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-earth">Dokumentasi Video</h2>
+                </div>
+                <div class="w-24 h-1 bg-primary mx-auto rounded-full mb-6"></div>
+                <p class="text-stone-600 max-w-2xl mx-auto">Koleksi video pembelajaran dan kegiatan sehari-hari siswa
+                    Lahiza Sunnah yang dapat dibuka dalam popup player.</p>
+            </div>
+
+            <!-- Video Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                @forelse($videos as $video)
+                    <!-- Video Card -->
+                    <div class="group cursor-pointer" onclick="openVideoModal('{{ $video->youtube_playlist_id }}')">
+                        <div
+                            class="relative overflow-hidden rounded-2xl bg-stone-900 aspect-video group-hover:ring-2 ring-primary transition">
+                            <div
+                                class="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition flex items-center justify-center">
+                                <div
+                                    class="w-16 h-16 bg-secondary rounded-full flex items-center justify-center group-hover:scale-110 transition shadow-lg">
+                                    <i data-lucide="play" class="w-8 h-8 text-white fill-current"></i>
+                                </div>
+                            </div>
+                            <img src="{{ $video->thumbnail ?: 'https://via.placeholder.com/400x225?text=' . urlencode($video->title) }}"
+                                alt="{{ $video->title }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        </div>
+                        <h3 class="font-bold text-earth mt-3 group-hover:text-primary transition">{{ $video->title }}
+                        </h3>
+                        <p class="text-sm text-stone-600">{{ $video->description ?? $video->category }}</p>
+                        @if ($video->category)
+                            <span
+                                class="inline-block mt-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">{{ $video->category }}</span>
+                        @endif
+                    </div>
+                @empty
+                    <div class="col-span-full text-center py-12 px-6 bg-stone-50 rounded-2xl">
+                        <i data-lucide="video-off" class="w-12 h-12 text-stone-300 mx-auto mb-4"></i>
+                        <p class="text-stone-600">Belum ada video dokumentasi yang dipublikasikan</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal Popup -->
+    <div id="video-modal"
+        class="fixed inset-0 z-50 hidden bg-stone-900/80 backdrop-blur-sm flex items-center justify-center p-4"
+        onclick="if(event.target === this) closeVideoModal()">
+        <div
+            class="relative w-full max-w-4xl bg-stone-900 rounded-2xl overflow-hidden shadow-2xl animate-[fadeIn_0.3s_ease-out]">
+            <!-- Close Button -->
+            <button onclick="closeVideoModal()"
+                class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition z-10">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- YouTube Embed -->
+            <div class="relative w-full" style="padding-bottom: 56.25%;">
+                <iframe id="youtube-player" class="absolute top-0 left-0 w-full h-full" src=""
+                    title="Video Dokumentasi Lahiza Sunnah" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Modal -->
+    <div id="photo-modal"
+        class="fixed inset-0 z-50 hidden bg-stone-900/80 backdrop-blur-sm flex items-center justify-center p-4"
+        onclick="if(event.target === this) closePhotoModal()">
+        <div
+            class="relative w-full max-w-4xl bg-stone-900 rounded-2xl overflow-hidden shadow-2xl animate-[fadeIn_0.3s_ease-out]">
+            <!-- Close Button -->
+            <button onclick="closePhotoModal()"
+                class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition z-10">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Photo -->
+            <div class="w-full">
+                <img id="photo-image" src="" alt="Foto" class="w-full h-auto object-contain">
+            </div>
+
+            <!-- Photo Title -->
+            <div class="bg-stone-800 px-6 py-4">
+                <h3 id="photo-title" class="text-white font-bold text-lg"></h3>
+            </div>
+        </div>
+    </div>
+
     <!-- PPDB Form Section -->
     <section id="ppdb" class="py-24 bg-earth text-white relative">
         <div
@@ -432,6 +522,10 @@
 
             <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl text-stone-800">
                 <form id="form-ppdb" onsubmit="handleFormSubmit(event)">
+                    @csrf
+                    <div id="form-error"
+                        class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700"></div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <!-- Data Anak -->
                         <div class="space-y-4">
@@ -440,14 +534,14 @@
                             <div>
                                 <label class="block text-sm font-medium text-stone-600 mb-1">Nama Lengkap Anak
                                     *</label>
-                                <input type="text" id="namaAnak" required
+                                <input type="text" id="namaAnak" name="student_name" required
                                     class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
                                     placeholder="Masukkan nama lengkap">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-stone-600 mb-1">Tanggal Lahir *</label>
-                                <input type="date" id="tglLahir" required
+                                <input type="date" id="tglLahir" name="student_birth_date" required
                                     class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
                             </div>
 
@@ -457,13 +551,13 @@
                                 <div class="flex gap-4">
                                     <label
                                         class="flex-1 border border-stone-200 rounded-xl p-3 cursor-pointer hover:bg-leaf transition flex items-center gap-2">
-                                        <input type="radio" name="unit" value="TK" required
+                                        <input type="radio" name="school_unit_code" value="TK" required
                                             class="text-primary focus:ring-primary w-4 h-4">
                                         <span class="font-medium text-stone-700">TK Lahiza</span>
                                     </label>
                                     <label
                                         class="flex-1 border border-stone-200 rounded-xl p-3 cursor-pointer hover:bg-leaf transition flex items-center gap-2">
-                                        <input type="radio" name="unit" value="SD" required
+                                        <input type="radio" name="school_unit_code" value="SD" required
                                             class="text-primary focus:ring-primary w-4 h-4">
                                         <span class="font-medium text-stone-700">SD Lahiza</span>
                                     </label>
@@ -477,7 +571,7 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-stone-600 mb-1">Nama Ayah / Ibu *</label>
-                                <input type="text" id="namaOrtu" required
+                                <input type="text" id="namaOrtu" name="parent_name" required
                                     class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
                                     placeholder="Nama representatif">
                             </div>
@@ -485,14 +579,14 @@
                             <div>
                                 <label class="block text-sm font-medium text-stone-600 mb-1">No. WhatsApp Aktif
                                     *</label>
-                                <input type="tel" id="noWa" required
+                                <input type="tel" id="noWa" name="parent_phone" required
                                     class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
                                     placeholder="Contoh: 08123456789">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-stone-600 mb-1">Alamat Domisili *</label>
-                                <textarea id="alamat" required rows="2"
+                                <textarea id="alamat" name="parent_address" required rows="2"
                                     class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
                                     placeholder="Alamat tempat tinggal saat ini"></textarea>
                             </div>
@@ -500,10 +594,10 @@
                     </div>
 
                     <div class="mt-8 flex justify-end">
-                        <button type="submit"
-                            class="w-full md:w-auto bg-primary hover:bg-primaryLight text-white px-8 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 text-lg">
+                        <button type="submit" id="submit-btn"
+                            class="w-full md:w-auto bg-primary hover:bg-primaryLight text-white px-8 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 text-lg disabled:opacity-75 disabled:cursor-not-allowed">
                             <i data-lucide="check-circle" class="w-5 h-5"></i>
-                            Daftar & Terbitkan Invoice
+                            <span id="submit-text">Daftar & Terbitkan Invoice</span>
                         </button>
                     </div>
                 </form>
@@ -511,65 +605,10 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-stone-900 text-stone-400 py-12 border-t-4 border-primary no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <i data-lucide="leaf" class="h-6 w-6 text-primaryLight"></i>
-                        <span class="font-serif font-bold text-xl text-white">Lahiza Sunnah</span>
-                    </div>
-                    <p class="mb-4 max-w-sm">
-                        Mendidik anak sesuai fitrah, membangun karakter Nabawiyah melalui kedekatan dengan alam,
-                        pertanian, dan peternakan.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="hover:text-white transition"><i data-lucide="instagram"
-                                class="w-5 h-5"></i></a>
-                        <a href="#" class="hover:text-white transition"><i data-lucide="facebook"
-                                class="w-5 h-5"></i></a>
-                        <a href="#" class="hover:text-white transition"><i data-lucide="youtube"
-                                class="w-5 h-5"></i></a>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-bold mb-4 font-serif">Kontak Kami</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li class="flex items-start gap-2">
-                            <i data-lucide="map-pin" class="w-4 h-4 shrink-0 mt-1"></i>
-                            Jl. Perkebunan Asri No.99, Kaki Gunung, Jawa Barat, Indonesia.
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i data-lucide="phone" class="w-4 h-4"></i>
-                            +62 812 3456 7890
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i data-lucide="mail" class="w-4 h-4"></i>
-                            info@lahizasunnah.sch.id
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-bold mb-4 font-serif">Tautan</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#tentang" class="hover:text-white transition">Tentang Sekolah</a></li>
-                        <li><a href="#unit" class="hover:text-white transition">Unit TK & SD</a></li>
-                        <li><a href="#informasi" class="hover:text-white transition">Artikel & Berita</a></li>
-                        <li><a href="#ppdb" class="hover:text-white transition">Pendaftaran PPDB</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-stone-800 mt-8 pt-8 text-sm text-center">
-                &copy; 2026 Sekolah Lahiza Sunnah. All rights reserved.
-            </div>
-        </div>
-    </footer>
+    @include('partials.footer')
 
     <!-- MODAL INVOICE (Hidden by default) -->
-    <div id="invoice-modal" class="fixed inset-0 z-50 hidden no-print">
+    <div id="invoice-modal" class="fixed inset-0 z-50 hidden">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-stone-900/80 backdrop-blur-sm" onclick="closeModal()"></div>
 
@@ -677,59 +716,186 @@
     </div>
 
     <!-- Script Logika PPDB & UI -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         // Inisialisasi ikon Lucide
         lucide.createIcons();
 
-        // Nomor WhatsApp Admin Tujuan (Ganti dengan nomor aslinya)
-        const ADMIN_WA = "6285716528671";
+        // Konfigurasi Axios dengan CSRF Token
+        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+            document.querySelector('input[name="_token"]')?.value;
 
-        function handleFormSubmit(event) {
+        if (token) {
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+        }
+
+        // Nomor WhatsApp Admin from config
+        const ADMIN_WA = "{{ config('app.whatsapp_phone') }}";
+
+
+        async function handleFormSubmit(event) {
             event.preventDefault(); // Mencegah reload halaman
 
-            // 1. Ambil data dari form
-            const namaAnak = document.getElementById('namaAnak').value;
-            const tglLahir = document.getElementById('tglLahir').value;
-            const unit = document.querySelector('input[name="unit"]:checked').value;
-            const namaOrtu = document.getElementById('namaOrtu').value;
-            const noWa = document.getElementById('noWa').value;
-            const alamat = document.getElementById('alamat').value;
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            const formError = document.getElementById('form-error');
+            const originalText = submitText.textContent;
 
-            // 2. Buat Nomor Invoice Random (contoh: REG-2026-XXXX)
-            const randomID = Math.floor(1000 + Math.random() * 9000);
-            const invoiceNo = `REG-2026-${randomID}`;
+            // Reset error message
+            formError.classList.add('hidden');
+            formError.textContent = '';
 
-            // Format Tanggal Hari Ini
-            const today = new Date();
-            const dateString = today.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitText.textContent = 'Memproses...';
 
-            // 3. Masukkan data ke dalam UI Invoice Modal
-            document.getElementById('inv-no').innerText = invoiceNo;
-            document.getElementById('inv-date').innerText = `Tanggal: ${dateString}`;
-            document.getElementById('inv-ortu').innerText = namaOrtu;
-            document.getElementById('inv-wa').innerText = noWa;
-            document.getElementById('inv-alamat').innerText = alamat;
-            document.getElementById('inv-anak').innerText = namaAnak;
-            document.getElementById('inv-tgl').innerText = `Tgl Lahir: ${tglLahir}`;
-            document.getElementById('inv-unit').innerText = `${unit} Lahiza`;
+            try {
+                // Ambil data dari form
+                const form = document.getElementById('form-ppdb');
+                const formData = new FormData(form);
 
-            // 4. Siapkan Text Pesan WhatsApp
-            const waText =
-                `Assalamu'alaikum Admin Lahiza Sunnah.%0A%0ASaya ingin mengkonfirmasi pendaftaran PPDB dengan detail berikut:%0A%0A*No. Registrasi:* ${invoiceNo}%0A*Nama Anak:* ${namaAnak}%0A*Unit:* ${unit}%0A*Nama Orang Tua:* ${namaOrtu}%0A*No. WA:* ${noWa}%0A%0AMohon panduannya untuk langkah selanjutnya. Terima kasih.`;
+                // Konversi FormData ke object biasa untuk pengiriman JSON
+                const data = {
+                    student_name: formData.get('student_name'),
+                    student_birth_date: formData.get('student_birth_date'),
+                    school_unit_code: formData.get('school_unit_code'),
+                    parent_name: formData.get('parent_name'),
+                    parent_phone: formData.get('parent_phone'),
+                    parent_address: formData.get('parent_address'),
+                };
 
-            // Set Link tombol WA
-            document.getElementById('wa-link').href = `https://wa.me/${ADMIN_WA}?text=${waText}`;
+                // Kirim ke server
+                const response = await axios.post('/ppdb/store', data);
 
-            // 5. Tampilkan Modal
-            document.getElementById('invoice-modal').classList.remove('hidden');
+                if (response.data.success) {
+                    const data = response.data.data;
+
+                    // Masukkan data ke dalam UI Invoice Modal
+                    document.getElementById('inv-no').innerText = data.registration_number;
+
+                    const today = new Date();
+                    const dateString = today.toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    document.getElementById('inv-date').innerText = `Tanggal: ${dateString}`;
+
+                    document.getElementById('inv-ortu').innerText = data.parent_name;
+                    document.getElementById('inv-wa').innerText = data.parent_phone;
+                    document.getElementById('inv-alamat').innerText = data.parent_address;
+                    document.getElementById('inv-anak').innerText = data.student_name;
+                    document.getElementById('inv-tgl').innerText = `Tgl Lahir: ${data.student_birth_date}`;
+                    document.getElementById('inv-unit').innerText = data.school_unit;
+
+                    // Siapkan Text Pesan WhatsApp
+                    const waText =
+                        `Assalamu'alaikum Admin Lahiza Sunnah.%0A%0ASaya ingin mengkonfirmasi pendaftaran PPDB dengan detail berikut:%0A%0A*No. Registrasi:* ${data.registration_number}%0A*Nama Anak:* ${data.student_name}%0A*Unit:* ${data.school_unit}%0A*Nama Orang Tua:* ${data.parent_name}%0A*No. WA:* ${data.parent_phone}%0A%0AMohon panduannya untuk langkah selanjutnya. Terima kasih.`;
+
+                    // Set Link tombol WA
+                    document.getElementById('wa-link').href = `https://wa.me/${ADMIN_WA}?text=${waText}`;
+
+                    // Tampilkan Modal
+                    document.getElementById('invoice-modal').classList.remove('hidden');
+
+                    // Reset form
+                    document.getElementById('form-ppdb').reset();
+                } else {
+                    throw new Error(response.data.message || 'Terjadi kesalahan');
+                }
+            } catch (error) {
+                let errorMessage = 'Terjadi kesalahan saat memproses pendaftaran';
+
+                if (error.response && error.response.data.errors) {
+                    // Tampilkan validation errors
+                    const errors = error.response.data.errors;
+                    errorMessage = Object.values(errors)
+                        .flat()
+                        .map(err => '• ' + err)
+                        .join('\n');
+                } else if (error.response && error.response.data.message) {
+                    errorMessage = error.response.data.message;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+
+                formError.textContent = errorMessage;
+                formError.classList.remove('hidden');
+            } finally {
+                // Enable submit button
+                submitBtn.disabled = false;
+                submitText.textContent = originalText;
+            }
         }
 
         function closeModal() {
             document.getElementById('invoice-modal').classList.add('hidden');
+        }
+
+        // Fungsi untuk membuka video modal dengan YouTube playlist
+        function openVideoModal(playlistId) {
+            const videoModal = document.getElementById('video-modal');
+            const youtubePlayer = document.getElementById('youtube-player');
+
+            // Set YouTube iframe src dengan playlist ID
+            youtubePlayer.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}`;
+
+            // Tampilkan modal
+            videoModal.classList.remove('hidden');
+
+            // Prevent scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fungsi untuk menutup video modal
+        function closeVideoModal() {
+            const videoModal = document.getElementById('video-modal');
+            const youtubePlayer = document.getElementById('youtube-player');
+
+            // Sembunyikan modal
+            videoModal.classList.add('hidden');
+
+            // Stop video dan reset src
+            youtubePlayer.src = '';
+
+            // Restore scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close video modal dengan ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const videoModal = document.getElementById('video-modal');
+                if (!videoModal.classList.contains('hidden')) {
+                    closeVideoModal();
+                }
+                const photoModal = document.getElementById('photo-modal');
+                if (photoModal && !photoModal.classList.contains('hidden')) {
+                    closePhotoModal();
+                }
+            }
+        });
+
+        // Fungsi untuk membuka photo modal
+        function openPhotoModal(imagePath, title) {
+            const photoModal = document.getElementById('photo-modal');
+            const photoImage = document.getElementById('photo-image');
+            const photoTitle = document.getElementById('photo-title');
+
+            photoImage.src = imagePath;
+            photoTitle.textContent = title;
+            photoModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fungsi untuk menutup photo modal
+        function closePhotoModal() {
+            const photoModal = document.getElementById('photo-modal');
+            const photoImage = document.getElementById('photo-image');
+
+            photoModal.classList.add('hidden');
+            photoImage.src = '';
+            document.body.style.overflow = 'auto';
         }
 
         // Tambahan style animasi sederhana untuk modal

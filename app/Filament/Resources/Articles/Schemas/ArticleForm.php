@@ -52,6 +52,8 @@ class ArticleForm
                         FileUpload::make('image')
                             ->label('Gambar Sampul')
                             ->image()
+                            ->disk('public')
+                            ->directory('articles')
                             ->columnSpanFull(),
                     ]),
 

@@ -21,7 +21,8 @@ class TeachersTable
                     ->searchable(),
                 TextColumn::make('slug')
                     ->searchable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image_url')
+                    ->label('Foto'),
                 TextColumn::make('schoolUnit.name')
                     ->searchable(),
                 TextColumn::make('email')

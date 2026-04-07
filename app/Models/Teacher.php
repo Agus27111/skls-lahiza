@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Teacher extends Model
 {
@@ -60,5 +62,22 @@ class Teacher extends Model
     public function getPositionDisplayAttribute(): string
     {
         return ucwords($this->position);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (blank($this->image)) {
+            return null;
+        }
+
+        if (Str::startsWith($this->image, ['http://', 'https://'])) {
+            return $this->image;
+        }
+
+        if (Str::startsWith($this->image, ['/storage/', 'storage/'])) {
+            return asset(ltrim($this->image, '/'));
+        }
+
+        return Storage::disk('public')->url($this->image);
     }
 }

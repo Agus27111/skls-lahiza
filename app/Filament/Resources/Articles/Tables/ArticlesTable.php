@@ -23,7 +23,8 @@ class ArticlesTable
                     ->searchable(),
                 TextColumn::make('category')
                     ->searchable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image_url')
+                    ->label('Gambar'),
                 TextColumn::make('teacher.name')
                     ->searchable(),
                 IconColumn::make('published')

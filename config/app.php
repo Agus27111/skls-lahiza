@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | WhatsApp Phone Number
+    |--------------------------------------------------------------------------
+    |
+    | The WhatsApp phone number used across the application for buttons and links.
+    | Falls back to env if no admin user has whatsapp_number set.
+    |
+    */
+    'whatsapp_phone' => env('WA_PHONE_NUMBER'),
+
 ];
+

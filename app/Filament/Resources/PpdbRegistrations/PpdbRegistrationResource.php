@@ -15,14 +15,25 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class PpdbRegistrationResource extends Resource
 {
     protected static ?string $model = PpdbRegistration::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Akademik';
 
-    protected static ?string $recordTitleAttribute = 'PPDB';
+    protected static ?string $navigationLabel = 'Pendaftaran PPDB';
+
+    protected static ?string $modelLabel = 'pendaftaran PPDB';
+
+    protected static ?string $pluralModelLabel = 'pendaftaran PPDB';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+
+    protected static ?string $recordTitleAttribute = 'student_name';
 
     public static function form(Schema $schema): Schema
     {
