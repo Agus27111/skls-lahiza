@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create();
 
         $this->call(HeroSectionSeeder::class);
+        $this->call(AboutPageSeeder::class);
+        $this->call(SchoolUnitFeaturedProgramSeeder::class);
 
         // Create school units with specific names for PPDB form
         $schoolUnits = collect([
@@ -39,6 +41,12 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'tk-lahiza',
                 'description' => 'Taman Kanak-Kanak Lahiza Sunnah mengedepankan pendidikan anak usia dini sesuai fitrah dengan pendekatan natural learning.',
                 'philosophy' => 'Mendidik anak-anak dengan pendekatan yang sesuai dengan fitrahnya, dekat dengan alam, dan mengembangkan karakter nabawiyah.',
+                'featured_program' => 'Pembelajaran fitrah, eksplorasi alam, dan pembiasaan adab islami sejak dini.',
+                'featured_programs' => [
+                    ['program' => 'Pembelajaran fitrah sesuai tahap perkembangan anak.'],
+                    ['program' => 'Eksplorasi alam sebagai media belajar utama.'],
+                    ['program' => 'Pembiasaan adab islami sejak dini.'],
+                ],
                 'max_quota' => 30,
                 'is_active' => true,
             ]),
@@ -47,6 +55,12 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'sd-lahiza',
                 'description' => 'Sekolah Dasar Lahiza Sunnah mengintegrasikan pembelajaran akademik dengan pengalaman praktis di alam dan pertanian.',
                 'philosophy' => 'Membangun generasi yang berpengetahuan, berkarakter, dan dekat dengan alam serta pemahaman nilai-nilai agama.',
+                'featured_program' => 'Ketahanan pangan, pembelajaran kontekstual, dan penguatan karakter nabawiyah.',
+                'featured_programs' => [
+                    ['program' => 'Ketahanan pangan melalui praktik kebun dan ternak.'],
+                    ['program' => 'Pembelajaran kontekstual yang terhubung dengan kehidupan nyata.'],
+                    ['program' => 'Penguatan karakter nabawiyah dalam keseharian.'],
+                ],
                 'max_quota' => 40,
                 'is_active' => true,
             ]),

@@ -98,6 +98,8 @@
 
     @php
         $hero = $heroSection ?? null;
+        $isPpdbActive = $hero?->is_ppdb_active ?? true;
+        $shouldShowPrimaryPpdbButton = $isPpdbActive || (($hero?->primary_button_url ?? '#ppdb') !== '#ppdb');
     @endphp
 
     <!-- Hero Section -->
@@ -105,10 +107,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div class="text-center md:text-left">
-                    <span
-                        class="inline-block py-1 px-3 rounded-full bg-sand text-secondary font-semibold text-sm mb-4 border border-secondary/20">
-                        {{ $hero?->eyebrow_text ?? 'Penerimaan Peserta Didik Baru 2026/2027' }}
-                    </span>
+                    @if ($isPpdbActive)
+                        <span
+                            class="inline-block py-1 px-3 rounded-full bg-sand text-secondary font-semibold text-sm mb-4 border border-secondary/20">
+                            {{ $hero?->eyebrow_text ?? 'Penerimaan Peserta Didik Baru 2026/2027' }}
+                        </span>
+                    @endif
                     <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-earth leading-tight mb-6">
                         {{ $hero?->title_prefix ?? 'Mendidik Sesuai' }} <span
                             class="text-primary">{{ $hero?->title_highlight ?? 'Fitrah' }}</span>,<br>{{ $hero?->title_suffix ?? 'Tumbuh Bersama Alam.' }}
@@ -117,10 +121,12 @@
                         {{ $hero?->description ?? 'Sekolah berbasis Karakter Nabawiyah yang menjadikan ketahanan pangan, pertanian, dan peternakan sebagai laboratorium kehidupan utama anak-anak kita.' }}
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                        <a href="{{ $hero?->primary_button_url ?? '#ppdb' }}"
-                            class="bg-primary hover:bg-earth text-white px-8 py-3.5 rounded-full font-medium transition shadow-xl shadow-primary/20 text-center">
-                            {{ $hero?->primary_button_label ?? 'Mulai Pendaftaran' }}
-                        </a>
+                        @if ($shouldShowPrimaryPpdbButton)
+                            <a href="{{ $hero?->primary_button_url ?? '#ppdb' }}"
+                                class="bg-primary hover:bg-earth text-white px-8 py-3.5 rounded-full font-medium transition shadow-xl shadow-primary/20 text-center">
+                                {{ $hero?->primary_button_label ?? 'Mulai Pendaftaran' }}
+                            </a>
+                        @endif
                         <a href="{{ $hero?->secondary_button_url ?? '#tentang' }}"
                             class="bg-white hover:bg-stone-50 text-earth border-2 border-earth/10 px-8 py-3.5 rounded-full font-medium transition text-center flex justify-center items-center gap-2">
                             <i data-lucide="play-circle" class="w-5 h-5 text-secondary"></i>
@@ -248,10 +254,17 @@
                                 {{ $unit->description }}
                             </p>
                             <ul class="space-y-2 mb-8">
-                                <li class="flex items-center gap-2 text-stone-600"><i
-                                        data-lucide="{{ $loop->first ? 'bird' : 'shovel' }}"
-                                        class="w-4 h-4 {{ $loop->first ? 'text-secondary' : 'text-primary' }}"></i>
-                                    Program unggulan TBD</li>
+                                @forelse ($unit->featured_programs_list as $program)
+                                    <li class="flex items-center gap-2 text-stone-600"><i
+                                            data-lucide="{{ $loop->parent->first ? 'bird' : 'shovel' }}"
+                                            class="w-4 h-4 {{ $loop->parent->first ? 'text-secondary' : 'text-primary' }}"></i>
+                                        {{ $program }}</li>
+                                @empty
+                                    <li class="flex items-center gap-2 text-stone-600"><i
+                                            data-lucide="{{ $loop->first ? 'bird' : 'shovel' }}"
+                                            class="w-4 h-4 {{ $loop->first ? 'text-secondary' : 'text-primary' }}"></i>
+                                        Program unggulan belum diatur</li>
+                                @endforelse
                             </ul>
                         </div>
                     </div>
@@ -504,8 +517,9 @@
         </div>
     </div>
 
-    <!-- PPDB Form Section -->
-    <section id="ppdb" class="py-24 bg-earth text-white relative">
+    @if ($isPpdbActive)
+        <!-- PPDB Form Section -->
+        <section id="ppdb" class="py-24 bg-earth text-white relative">
         <div
             class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center">
         </div>
@@ -521,7 +535,7 @@
             </div>
 
             <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl text-stone-800">
-                <form id="form-ppdb" onsubmit="handleFormSubmit(event)">
+                <form id="form-ppdb" onsubmit="handleFormSubmit(event)" enctype="multipart/form-data">
                     @csrf
                     <div id="form-error"
                         class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700"></div>
@@ -593,6 +607,37 @@
                         </div>
                     </div>
 
+                    <div class="border-t border-stone-200 pt-6">
+                        <h3 class="font-bold text-earth border-b pb-2 mb-4">Upload Dokumen Persyaratan</h3>
+                        <p class="text-sm text-stone-500 mb-4">Format file: PDF/JPG/PNG, maksimal 5 MB per dokumen.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-stone-600 mb-1">KK *</label>
+                                <input type="file" name="family_card_file" required accept=".pdf,.jpg,.jpeg,.png"
+                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-stone-600 mb-1">KTP Ayah *</label>
+                                <input type="file" name="father_id_card_file" required accept=".pdf,.jpg,.jpeg,.png"
+                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-stone-600 mb-1">KTP Ibu *</label>
+                                <input type="file" name="mother_id_card_file" required accept=".pdf,.jpg,.jpeg,.png"
+                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-stone-600 mb-1">Akte Lahir *</label>
+                                <input type="file" name="birth_certificate_file" required accept=".pdf,.jpg,.jpeg,.png"
+                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mt-8 flex justify-end">
                         <button type="submit" id="submit-btn"
                             class="w-full md:w-auto bg-primary hover:bg-primaryLight text-white px-8 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 text-lg disabled:opacity-75 disabled:cursor-not-allowed">
@@ -603,7 +648,8 @@
                 </form>
             </div>
         </div>
-    </section>
+        </section>
+    @endif
 
     @include('partials.footer')
 
@@ -754,18 +800,12 @@
                 const form = document.getElementById('form-ppdb');
                 const formData = new FormData(form);
 
-                // Konversi FormData ke object biasa untuk pengiriman JSON
-                const data = {
-                    student_name: formData.get('student_name'),
-                    student_birth_date: formData.get('student_birth_date'),
-                    school_unit_code: formData.get('school_unit_code'),
-                    parent_name: formData.get('parent_name'),
-                    parent_phone: formData.get('parent_phone'),
-                    parent_address: formData.get('parent_address'),
-                };
-
                 // Kirim ke server
-                const response = await axios.post('/ppdb/store', data);
+                const response = await axios.post('/ppdb/store', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
 
                 if (response.data.success) {
                     const data = response.data.data;
@@ -911,3 +951,4 @@
 </body>
 
 </html>
+

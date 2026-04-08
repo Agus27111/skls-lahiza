@@ -4,6 +4,7 @@ namespace App\Filament\Resources\PpdbRegistrations\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -80,6 +81,41 @@ class PpdbRegistrationForm
                             ->label('Alamat Domisili')
                             ->required()
                             ->columnSpanFull(),
+                    ]),
+
+                Section::make('Dokumen Persyaratan')
+                    ->description('Dokumen yang diunggah saat pendaftaran')
+                    ->columns(2)
+                    ->collapsible()
+                    ->schema([
+                        FileUpload::make('family_card_path')
+                            ->label('File KK')
+                            ->disk('public')
+                            ->directory('ppdb-documents/manual')
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
+                            ->downloadable()
+                            ->openable(),
+                        FileUpload::make('father_id_card_path')
+                            ->label('File KTP Ayah')
+                            ->disk('public')
+                            ->directory('ppdb-documents/manual')
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
+                            ->downloadable()
+                            ->openable(),
+                        FileUpload::make('mother_id_card_path')
+                            ->label('File KTP Ibu')
+                            ->disk('public')
+                            ->directory('ppdb-documents/manual')
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
+                            ->downloadable()
+                            ->openable(),
+                        FileUpload::make('birth_certificate_path')
+                            ->label('File Akte Lahir')
+                            ->disk('public')
+                            ->directory('ppdb-documents/manual')
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
+                            ->downloadable()
+                            ->openable(),
                     ]),
 
                 Section::make('Status & Pembayaran')

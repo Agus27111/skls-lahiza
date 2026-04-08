@@ -1,3 +1,7 @@
+@php
+    $isPpdbActive = $activeHeroSection?->is_ppdb_active ?? true;
+@endphp
+
 <footer class="bg-stone-900 text-stone-400 py-12 border-t-4 border-primary no-print">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -45,7 +49,9 @@
                     <li><a href="/#tentang" class="hover:text-white transition">Tentang Sekolah</a></li>
                     <li><a href="/#unit" class="hover:text-white transition">Unit TK & SD</a></li>
                     <li><a href="/dokumentasi" class="hover:text-white transition">Dokumentasi</a></li>
-                    <li><a href="/#ppdb" class="hover:text-white transition">Pendaftaran PPDB</a></li>
+                    @if ($isPpdbActive)
+                        <li><a href="/#ppdb" class="hover:text-white transition">Pendaftaran PPDB</a></li>
+                    @endif
                 </ul>
             </div>
         </div>

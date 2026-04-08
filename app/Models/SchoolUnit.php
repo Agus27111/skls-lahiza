@@ -17,13 +17,39 @@ class SchoolUnit extends Model
         'slug',
         'description',
         'philosophy',
+        'featured_program',
+        'featured_programs',
         'max_quota',
         'is_active',
     ];
 
     protected $casts = [
+        'featured_programs' => 'array',
         'is_active' => 'boolean',
     ];
+
+    public function getFeaturedProgramsListAttribute(): array
+    {
+        $programs = collect($this->featured_programs)
+            ->map(function ($item) {
+                if (is_array($item)) {
+                    return $item['program'] ?? null;
+                }
+
+                return $item;
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        if ($programs !== []) {
+            return $programs;
+        }
+
+        return filled($this->featured_program)
+            ? [$this->featured_program]
+            : [];
+    }
 
     /**
      * Get all PPDB registrations for this school unit

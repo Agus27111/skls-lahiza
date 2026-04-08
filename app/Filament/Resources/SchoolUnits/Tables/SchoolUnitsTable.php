@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\SchoolUnits\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -19,6 +20,10 @@ class SchoolUnitsTable
                     ->searchable(),
                 TextColumn::make('slug')
                     ->searchable(),
+                TextColumn::make('featured_programs_list')
+                    ->label('Program Unggulan')
+                    ->formatStateUsing(fn (array $state): string => implode(' | ', $state))
+                    ->limit(60),
                 TextColumn::make('max_quota')
                     ->numeric()
                     ->sortable(),
@@ -38,6 +43,7 @@ class SchoolUnitsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -27,6 +27,7 @@ class HeroSectionSeeder extends Seeder
                 'image_alt' => 'Anak-anak di alam',
                 'floating_badge_label' => 'Pembelajaran Aktif',
                 'floating_badge_text' => '100% Berbasis Alam',
+                'is_ppdb_active' => true,
                 'is_active' => true,
             ],
         );

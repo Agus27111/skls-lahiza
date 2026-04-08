@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\HeroSections\Schemas;
 
+use App\Models\HeroSection;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -76,7 +77,8 @@ class HeroSectionForm
                             ->image()
                             ->disk('public')
                             ->directory('hero-sections')
-                            ->required()
+                            ->required(fn (string $operation): bool => $operation === 'create')
+                            ->dehydrated(fn ($state): bool => filled($state))
                             ->imageEditor()
                             ->helperText('Upload gambar hero. File akan disimpan di storage publik.')
                             ->columnSpanFull(),
@@ -93,9 +95,13 @@ class HeroSectionForm
                             ->maxLength(255),
                     ]),
                 Section::make('Status')
-                    ->description('Hanya satu hero aktif yang akan tampil di beranda')
+                    ->description('Atur hero aktif dan status tampilnya fitur PPDB di beranda')
                     ->collapsible()
                     ->schema([
+                        Toggle::make('is_ppdb_active')
+                            ->label('PPDB Aktif')
+                            ->helperText('Jika dimatikan, section pendaftaran dan tombol PPDB tidak akan tampil.')
+                            ->required(),
                         Toggle::make('is_active')
                             ->label('Aktif')
                             ->required(),

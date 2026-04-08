@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\HeroSections\Tables;
+namespace App\Filament\Resources\AboutPages\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -10,28 +10,23 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class HeroSectionsTable
+class AboutPagesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('updated_at', 'desc')
             ->columns([
-                TextColumn::make('eyebrow_text')
-                    ->label('Badge Atas')
-                    ->searchable()
-                    ->limit(40),
-                TextColumn::make('title_prefix')
+                TextColumn::make('hero_title')
                     ->label('Judul')
-                    ->searchable()
-                    ->formatStateUsing(fn(string $state, $record): string => trim($state . ' ' . $record->title_highlight)),
-                TextColumn::make('primary_button_label')
-                    ->label('Tombol Utama')
+                    ->searchable(),
+                TextColumn::make('eyebrow_text')
+                    ->label('Badge')
                     ->searchable(),
                 IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean(),
                 TextColumn::make('updated_at')
+                    ->label('Terakhir Diubah')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('created_at')
@@ -47,7 +42,9 @@ class HeroSectionsTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([]),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
             ]);
     }
 }

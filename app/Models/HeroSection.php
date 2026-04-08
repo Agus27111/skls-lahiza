@@ -27,14 +27,17 @@ class HeroSection extends Model
         'image_alt',
         'floating_badge_label',
         'floating_badge_text',
+        'is_ppdb_active',
         'is_active',
     ];
 
     protected $attributes = [
+        'is_ppdb_active' => true,
         'is_active' => true,
     ];
 
     protected $casts = [
+        'is_ppdb_active' => 'boolean',
         'is_active' => 'boolean',
     ];
 

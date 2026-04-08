@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SchoolUnits\Schemas;
 
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -41,6 +42,19 @@ class SchoolUnitForm
                             ->label('Filosofi Pendidikan')
                             ->required()
                             ->rows(4)
+                            ->columnSpanFull(),
+                        Repeater::make('featured_programs')
+                            ->label('Program Unggulan')
+                            ->schema([
+                                TextInput::make('program')
+                                    ->label('Poin Program')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->defaultItems(1)
+                            ->minItems(1)
+                            ->reorderable()
+                            ->addActionLabel('Tambah Program')
                             ->columnSpanFull(),
                     ]),
                 Section::make('Pengaturan')

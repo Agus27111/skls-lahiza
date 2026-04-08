@@ -24,6 +24,10 @@ class PpdbRegistration extends Model
         'parent_email',
         'parent_address',
         'parent_relationship',
+        'family_card_path',
+        'father_id_card_path',
+        'mother_id_card_path',
+        'birth_certificate_path',
         'status',
         'registration_fee',
         'fee_paid',
@@ -74,7 +78,7 @@ class PpdbRegistration extends Model
     /**
      * Confirm/approve registration
      */
-    public function confirm(string $notes = null): void
+    public function confirm(?string $notes = null): void
     {
         $this->update([
             'status' => 'confirmed',
@@ -86,7 +90,7 @@ class PpdbRegistration extends Model
     /**
      * Accept registration (final approval)
      */
-    public function accept(string $notes = null): void
+    public function accept(?string $notes = null): void
     {
         $this->update([
             'status' => 'accepted',
@@ -98,7 +102,7 @@ class PpdbRegistration extends Model
     /**
      * Reject registration
      */
-    public function reject(string $notes = null): void
+    public function reject(?string $notes = null): void
     {
         $this->update([
             'status' => 'rejected',

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PpdbRegistrations\Schemas;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class PpdbRegistrationInfolist
 {
@@ -31,6 +32,26 @@ class PpdbRegistrationInfolist
                     ->columnSpanFull(),
                 TextEntry::make('parent_relationship')
                     ->placeholder('-'),
+                TextEntry::make('family_card_path')
+                    ->label('File KK')
+                    ->formatStateUsing(fn (?string $state): string => $state ? 'Lihat dokumen' : '-')
+                    ->url(fn ($record): ?string => $record->family_card_path ? Storage::disk('public')->url($record->family_card_path) : null)
+                    ->openUrlInNewTab(),
+                TextEntry::make('father_id_card_path')
+                    ->label('File KTP Ayah')
+                    ->formatStateUsing(fn (?string $state): string => $state ? 'Lihat dokumen' : '-')
+                    ->url(fn ($record): ?string => $record->father_id_card_path ? Storage::disk('public')->url($record->father_id_card_path) : null)
+                    ->openUrlInNewTab(),
+                TextEntry::make('mother_id_card_path')
+                    ->label('File KTP Ibu')
+                    ->formatStateUsing(fn (?string $state): string => $state ? 'Lihat dokumen' : '-')
+                    ->url(fn ($record): ?string => $record->mother_id_card_path ? Storage::disk('public')->url($record->mother_id_card_path) : null)
+                    ->openUrlInNewTab(),
+                TextEntry::make('birth_certificate_path')
+                    ->label('File Akte Lahir')
+                    ->formatStateUsing(fn (?string $state): string => $state ? 'Lihat dokumen' : '-')
+                    ->url(fn ($record): ?string => $record->birth_certificate_path ? Storage::disk('public')->url($record->birth_certificate_path) : null)
+                    ->openUrlInNewTab(),
                 TextEntry::make('status')
                     ->badge(),
                 TextEntry::make('registration_fee')
