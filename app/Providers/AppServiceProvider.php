@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\HeroSection;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::share('activeHeroSection', HeroSection::active()->latest('updated_at')->first());
+        $activeHeroSection = null;
+
+        if (Schema::hasTable('hero_sections')) {
+            try {
+                $activeHeroSection = HeroSection::active()->latest('updated_at')->first();
+            } catch (\Throwable) {
+                $activeHeroSection = null;
+            }
+        }
+
+        View::share('activeHeroSection', $activeHeroSection);
     }
 }

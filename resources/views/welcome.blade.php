@@ -99,7 +99,15 @@
     @php
         $hero = $heroSection ?? null;
         $isPpdbActive = $hero?->is_ppdb_active ?? true;
-        $shouldShowPrimaryPpdbButton = $isPpdbActive || (($hero?->primary_button_url ?? '#ppdb') !== '#ppdb');
+        $shouldShowPrimaryPpdbButton = $isPpdbActive || ($hero?->primary_button_url ?? '#ppdb') !== '#ppdb';
+        $ppdbLimits = $ppdbUploadLimits ?? [
+            'per_file_kb' => 2048,
+            'per_file_mb_label' => '2',
+            'total_post_kb' => 8192,
+            'total_post_mb_label' => '8',
+        ];
+        $paymentSetting = $ppdbPaymentSetting ?? null;
+        $registrationFeeFormatted = $paymentSetting?->formatted_registration_fee ?? 'Rp 250.000';
     @endphp
 
     <!-- Hero Section -->
@@ -152,7 +160,8 @@
                             <p class="text-xs text-stone-500 font-medium">
                                 {{ $hero?->floating_badge_label ?? 'Pembelajaran Aktif' }}
                             </p>
-                            <p class="font-bold text-earth">{{ $hero?->floating_badge_text ?? '100% Berbasis Alam' }}</p>
+                            <p class="font-bold text-earth">{{ $hero?->floating_badge_text ?? '100% Berbasis Alam' }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -520,134 +529,146 @@
     @if ($isPpdbActive)
         <!-- PPDB Form Section -->
         <section id="ppdb" class="py-24 bg-earth text-white relative">
-        <div
-            class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center">
-        </div>
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-10">
-                <span
-                    class="bg-secondary/20 text-secondary-300 py-1 px-3 rounded-full text-sm font-semibold tracking-wider mb-4 inline-block">FORM
-                    PENDAFTARAN</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-bold mb-4">Bergabunglah Bersama Kami</h2>
-                <p class="text-stone-300 max-w-2xl mx-auto">Lengkapi formulir di bawah ini untuk pendaftaran awal.
-                    Sistem akan membuatkan <strong>Invoice/Tanda Terima</strong> dan mengarahkan Anda ke WhatsApp Admin.
-                </p>
+            <div
+                class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center">
             </div>
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-10">
+                    <span
+                        class="bg-secondary/20 text-secondary-300 py-1 px-3 rounded-full text-sm font-semibold tracking-wider mb-4 inline-block">FORM
+                        PENDAFTARAN</span>
+                    <h2 class="font-serif text-3xl md:text-4xl font-bold mb-4">Bergabunglah Bersama Kami</h2>
+                    <p class="text-stone-300 max-w-2xl mx-auto">Lengkapi formulir di bawah ini untuk pendaftaran awal.
+                        Sistem akan membuatkan <strong>Invoice/Tanda Terima</strong> dan mengarahkan Anda ke WhatsApp
+                        Admin.
+                    </p>
+                </div>
 
-            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl text-stone-800">
-                <form id="form-ppdb" onsubmit="handleFormSubmit(event)" enctype="multipart/form-data">
-                    @csrf
-                    <div id="form-error"
-                        class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700"></div>
+                <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl text-stone-800">
+                    <form id="form-ppdb" onsubmit="handleFormSubmit(event)" enctype="multipart/form-data">
+                        @csrf
+                        <div id="form-error"
+                            class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700"></div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <!-- Data Anak -->
-                        <div class="space-y-4">
-                            <h3 class="font-bold text-earth border-b pb-2 mb-4">Data Calon Siswa</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <!-- Data Anak -->
+                            <div class="space-y-4">
+                                <h3 class="font-bold text-earth border-b pb-2 mb-4">Data Calon Siswa</h3>
 
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">Nama Lengkap Anak
-                                    *</label>
-                                <input type="text" id="namaAnak" name="student_name" required
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
-                                    placeholder="Masukkan nama lengkap">
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">Nama Lengkap Anak
+                                        *</label>
+                                    <input type="text" id="namaAnak" name="student_name" required
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
+                                        placeholder="Masukkan nama lengkap">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">Tanggal Lahir
+                                        *</label>
+                                    <input type="date" id="tglLahir" name="student_birth_date" required
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">Pilih Unit Pendidikan
+                                        *</label>
+                                    <div class="flex gap-4">
+                                        <label
+                                            class="flex-1 border border-stone-200 rounded-xl p-3 cursor-pointer hover:bg-leaf transition flex items-center gap-2">
+                                            <input type="radio" name="school_unit_code" value="TK" required
+                                                class="text-primary focus:ring-primary w-4 h-4">
+                                            <span class="font-medium text-stone-700">TK Lahiza</span>
+                                        </label>
+                                        <label
+                                            class="flex-1 border border-stone-200 rounded-xl p-3 cursor-pointer hover:bg-leaf transition flex items-center gap-2">
+                                            <input type="radio" name="school_unit_code" value="SD" required
+                                                class="text-primary focus:ring-primary w-4 h-4">
+                                            <span class="font-medium text-stone-700">SD Lahiza</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">Tanggal Lahir *</label>
-                                <input type="date" id="tglLahir" name="student_birth_date" required
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
-                            </div>
+                            <!-- Data Ortu -->
+                            <div class="space-y-4">
+                                <h3 class="font-bold text-earth border-b pb-2 mb-4">Data Orang Tua / Wali</h3>
 
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">Pilih Unit Pendidikan
-                                    *</label>
-                                <div class="flex gap-4">
-                                    <label
-                                        class="flex-1 border border-stone-200 rounded-xl p-3 cursor-pointer hover:bg-leaf transition flex items-center gap-2">
-                                        <input type="radio" name="school_unit_code" value="TK" required
-                                            class="text-primary focus:ring-primary w-4 h-4">
-                                        <span class="font-medium text-stone-700">TK Lahiza</span>
-                                    </label>
-                                    <label
-                                        class="flex-1 border border-stone-200 rounded-xl p-3 cursor-pointer hover:bg-leaf transition flex items-center gap-2">
-                                        <input type="radio" name="school_unit_code" value="SD" required
-                                            class="text-primary focus:ring-primary w-4 h-4">
-                                        <span class="font-medium text-stone-700">SD Lahiza</span>
-                                    </label>
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">Nama Ayah / Ibu
+                                        *</label>
+                                    <input type="text" id="namaOrtu" name="parent_name" required
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
+                                        placeholder="Nama representatif">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">No. WhatsApp Aktif
+                                        *</label>
+                                    <input type="tel" id="noWa" name="parent_phone" required
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
+                                        placeholder="Contoh: 08123456789">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">Alamat Domisili
+                                        *</label>
+                                    <textarea id="alamat" name="parent_address" required rows="2"
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
+                                        placeholder="Alamat tempat tinggal saat ini"></textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Data Ortu -->
-                        <div class="space-y-4">
-                            <h3 class="font-bold text-earth border-b pb-2 mb-4">Data Orang Tua / Wali</h3>
+                        <div class="border-t border-stone-200 pt-6">
+                            <h3 class="font-bold text-earth border-b pb-2 mb-4">Upload Dokumen Persyaratan</h3>
+                            <p class="text-sm text-stone-500 mb-4">
+                                Format file: PDF/JPG/PNG, maksimal {{ $ppdbLimits['per_file_mb_label'] }} MB per
+                                dokumen.
+                                Total upload per pengiriman maksimal {{ $ppdbLimits['total_post_mb_label'] }} MB.
+                            </p>
 
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">Nama Ayah / Ibu *</label>
-                                <input type="text" id="namaOrtu" name="parent_name" required
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
-                                    placeholder="Nama representatif">
-                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">KK *</label>
+                                    <input type="file" name="family_card_file" required
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">No. WhatsApp Aktif
-                                    *</label>
-                                <input type="tel" id="noWa" name="parent_phone" required
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
-                                    placeholder="Contoh: 08123456789">
-                            </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">KTP Ayah *</label>
+                                    <input type="file" name="father_id_card_file" required
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                                </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">Alamat Domisili *</label>
-                                <textarea id="alamat" name="parent_address" required rows="2"
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
-                                    placeholder="Alamat tempat tinggal saat ini"></textarea>
-                            </div>
-                        </div>
-                    </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">KTP Ibu *</label>
+                                    <input type="file" name="mother_id_card_file" required
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                                </div>
 
-                    <div class="border-t border-stone-200 pt-6">
-                        <h3 class="font-bold text-earth border-b pb-2 mb-4">Upload Dokumen Persyaratan</h3>
-                        <p class="text-sm text-stone-500 mb-4">Format file: PDF/JPG/PNG, maksimal 5 MB per dokumen.</p>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">KK *</label>
-                                <input type="file" name="family_card_file" required accept=".pdf,.jpg,.jpeg,.png"
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">KTP Ayah *</label>
-                                <input type="file" name="father_id_card_file" required accept=".pdf,.jpg,.jpeg,.png"
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">KTP Ibu *</label>
-                                <input type="file" name="mother_id_card_file" required accept=".pdf,.jpg,.jpeg,.png"
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-stone-600 mb-1">Akte Lahir *</label>
-                                <input type="file" name="birth_certificate_file" required accept=".pdf,.jpg,.jpeg,.png"
-                                    class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                                <div>
+                                    <label class="block text-sm font-medium text-stone-600 mb-1">Akte Lahir *</label>
+                                    <input type="file" name="birth_certificate_file" required
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                        class="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-earth">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mt-8 flex justify-end">
-                        <button type="submit" id="submit-btn"
-                            class="w-full md:w-auto bg-primary hover:bg-primaryLight text-white px-8 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 text-lg disabled:opacity-75 disabled:cursor-not-allowed">
-                            <i data-lucide="check-circle" class="w-5 h-5"></i>
-                            <span id="submit-text">Daftar & Terbitkan Invoice</span>
-                        </button>
-                    </div>
-                </form>
+                        <div class="mt-8 flex justify-end">
+                            <button type="submit" id="submit-btn"
+                                class="w-full md:w-auto bg-primary hover:bg-primaryLight text-white px-8 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 text-lg disabled:opacity-75 disabled:cursor-not-allowed">
+                                <i data-lucide="check-circle" class="w-5 h-5"></i>
+                                <span id="submit-text">Daftar & Terbitkan Invoice</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
         </section>
     @endif
 
@@ -682,7 +703,8 @@
                                 <i data-lucide="leaf" class="h-8 w-8 text-primary"></i>
                                 <span class="font-serif font-bold text-2xl text-earth">Lahiza Sunnah</span>
                             </div>
-                            <p class="text-sm text-stone-500">Jl. Perkebunan Asri No.99, Jawa Barat<br>Telp: +62 812
+                            <p class="text-sm text-stone-500">Kandanghaur, Kabupaten Indramayu, Jawa Barat<br>Telp: +62
+                                812
                                 3456 7890</p>
                         </div>
                         <div class="text-right">
@@ -732,10 +754,28 @@
                             <tfoot class="bg-stone-100">
                                 <tr>
                                     <td class="p-4 text-right font-bold text-stone-600">Biaya Pendaftaran:</td>
-                                    <td class="p-4 text-right font-bold text-stone-800 text-lg">Rp 250.000</td>
+                                    <td class="p-4 text-right font-bold text-stone-800 text-lg" id="inv-fee">
+                                        {{ $registrationFeeFormatted }}
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>
+                    </div>
+
+                    <div class="mt-6 rounded-xl border border-stone-200 bg-stone-50/80 p-5">
+                        <h3 class="font-bold text-earth mb-3">Informasi Transfer</h3>
+                        <div class="space-y-2 text-sm text-stone-600">
+                            <p><span class="font-medium text-stone-800">Bank:</span> <span
+                                    id="inv-bank">{{ $paymentSetting?->bank_name ?: '-' }}</span></p>
+                            <p><span class="font-medium text-stone-800">No. Rekening:</span> <span
+                                    id="inv-account-number">{{ $paymentSetting?->account_number ?: '-' }}</span></p>
+                            <p><span class="font-medium text-stone-800">Atas Nama:</span> <span
+                                    id="inv-account-name">{{ $paymentSetting?->account_holder_name ?: '-' }}</span>
+                            </p>
+                            <p><span class="font-medium text-stone-800">Catatan:</span> <span
+                                    id="inv-payment-notes">{{ $paymentSetting?->payment_notes ?: 'Silakan konfirmasi ke admin setelah transfer.' }}</span>
+                            </p>
+                        </div>
                     </div>
 
                     <div class="mt-8 text-center relative z-10">
@@ -777,6 +817,16 @@
 
         // Nomor WhatsApp Admin from config
         const ADMIN_WA = "{{ config('app.whatsapp_phone') }}";
+        const PPDB_MAX_FILE_BYTES = {{ (int) $ppdbLimits['per_file_kb'] * 1024 }};
+        const PPDB_MAX_TOTAL_BYTES = {{ (int) $ppdbLimits['total_post_kb'] * 1024 }};
+        const PPDB_MAX_FILE_LABEL = "{{ $ppdbLimits['per_file_mb_label'] }}";
+        const PPDB_MAX_TOTAL_LABEL = "{{ $ppdbLimits['total_post_mb_label'] }}";
+        const PPDB_FILE_LABELS = {
+            family_card_file: 'file KK',
+            father_id_card_file: 'file KTP ayah',
+            mother_id_card_file: 'file KTP ibu',
+            birth_certificate_file: 'file Akte Lahir',
+        };
 
 
         async function handleFormSubmit(event) {
@@ -798,6 +848,23 @@
             try {
                 // Ambil data dari form
                 const form = document.getElementById('form-ppdb');
+                const fileInputs = Array.from(form.querySelectorAll('input[type="file"]'));
+                const totalUploadSize = fileInputs.reduce((total, input) => total + (input.files[0]?.size || 0), 0);
+
+                const oversizedFile = fileInputs.find((input) => (input.files[0]?.size || 0) > PPDB_MAX_FILE_BYTES);
+
+                if (oversizedFile) {
+                    throw new Error(
+                        `Ukuran ${PPDB_FILE_LABELS[oversizedFile.name] || oversizedFile.name} melebihi batas ${PPDB_MAX_FILE_LABEL} MB.`
+                    );
+                }
+
+                if (totalUploadSize > PPDB_MAX_TOTAL_BYTES) {
+                    throw new Error(
+                        `Total ukuran semua dokumen melebihi batas ${PPDB_MAX_TOTAL_LABEL} MB dalam satu pengiriman.`
+                    );
+                }
+
                 const formData = new FormData(form);
 
                 // Kirim ke server
@@ -827,10 +894,16 @@
                     document.getElementById('inv-anak').innerText = data.student_name;
                     document.getElementById('inv-tgl').innerText = `Tgl Lahir: ${data.student_birth_date}`;
                     document.getElementById('inv-unit').innerText = data.school_unit;
+                    document.getElementById('inv-fee').innerText = data.registration_fee_formatted;
+                    document.getElementById('inv-bank').innerText = data.payment_bank_name || '-';
+                    document.getElementById('inv-account-number').innerText = data.payment_account_number || '-';
+                    document.getElementById('inv-account-name').innerText = data.payment_account_holder_name || '-';
+                    document.getElementById('inv-payment-notes').innerText = data.payment_notes ||
+                        'Silakan konfirmasi ke admin setelah transfer.';
 
                     // Siapkan Text Pesan WhatsApp
                     const waText =
-                        `Assalamu'alaikum Admin Lahiza Sunnah.%0A%0ASaya ingin mengkonfirmasi pendaftaran PPDB dengan detail berikut:%0A%0A*No. Registrasi:* ${data.registration_number}%0A*Nama Anak:* ${data.student_name}%0A*Unit:* ${data.school_unit}%0A*Nama Orang Tua:* ${data.parent_name}%0A*No. WA:* ${data.parent_phone}%0A%0AMohon panduannya untuk langkah selanjutnya. Terima kasih.`;
+                        `Assalamu'alaikum Admin Lahiza Sunnah.%0A%0ASaya ingin mengkonfirmasi pendaftaran PPDB dengan detail berikut:%0A%0A*No. Registrasi:* ${data.registration_number}%0A*Nama Anak:* ${data.student_name}%0A*Unit:* ${data.school_unit}%0A*Nama Orang Tua:* ${data.parent_name}%0A*No. WA:* ${data.parent_phone}%0A*Biaya Pendaftaran:* ${data.registration_fee_formatted}%0A%0AMohon panduannya untuk langkah selanjutnya. Terima kasih.`;
 
                     // Set Link tombol WA
                     document.getElementById('wa-link').href = `https://wa.me/${ADMIN_WA}?text=${waText}`;
@@ -951,4 +1024,3 @@
 </body>
 
 </html>
-

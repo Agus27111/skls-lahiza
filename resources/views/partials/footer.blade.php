@@ -37,7 +37,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         <i data-lucide="mail" class="w-4 h-4"></i>
-                        lahizasunnah@gmail.com
+                        sklslahizasunnah@gmail.com
                     </li>
                 </ul>
             </div>

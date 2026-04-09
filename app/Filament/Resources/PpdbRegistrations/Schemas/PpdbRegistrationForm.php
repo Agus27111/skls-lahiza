@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\PpdbRegistrations\Schemas;
 
+use App\Models\PpdbPaymentSetting;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -137,7 +138,7 @@ class PpdbRegistrationForm
                             ->label('Biaya Registrasi (Rp)')
                             ->required()
                             ->numeric()
-                            ->default(250000.0),
+                            ->default(fn () => PpdbPaymentSetting::active()->latest('updated_at')->value('registration_fee') ?? 250000),
                         Toggle::make('fee_paid')
                             ->label('Biaya Sudah Dibayar')
                             ->required(),

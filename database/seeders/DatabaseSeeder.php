@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(HeroSectionSeeder::class);
         $this->call(AboutPageSeeder::class);
+        $this->call(PpdbPaymentSettingSeeder::class);
         $this->call(SchoolUnitFeaturedProgramSeeder::class);
 
         // Create school units with specific names for PPDB form

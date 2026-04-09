@@ -55,7 +55,7 @@ class PpdbRegistrationInfolist
                 TextEntry::make('status')
                     ->badge(),
                 TextEntry::make('registration_fee')
-                    ->numeric(),
+                    ->money('IDR'),
                 IconEntry::make('fee_paid')
                     ->boolean(),
                 TextEntry::make('notes')
