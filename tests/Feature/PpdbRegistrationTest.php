@@ -94,3 +94,33 @@ it('rejects a registration when the selected unit quota is already full', functi
 
     expect(PpdbRegistration::query()->count())->toBe(1);
 });
+
+it('rate limits repeated PPDB submissions from the same phone and ip', function () {
+    Storage::fake('public');
+    ensureOptionalCmsTablesExist();
+
+    SchoolUnit::factory()->create([
+        'name' => 'TK Lahiza Sunnah',
+        'slug' => 'tk-lahiza',
+        'max_quota' => 50,
+        'is_active' => true,
+    ]);
+
+    $payload = ppdbPayload([
+        'parent_phone' => '081234567890',
+    ]);
+
+    for ($attempt = 1; $attempt <= 20; $attempt++) {
+        $response = $this->withServerVariables(['REMOTE_ADDR' => '127.0.0.1'])
+            ->post(route('ppdb.store'), $payload);
+
+        $response->assertSuccessful();
+    }
+
+    $blockedResponse = $this->withServerVariables(['REMOTE_ADDR' => '127.0.0.1'])
+        ->post(route('ppdb.store'), ppdbPayload([
+            'parent_phone' => '081234567890',
+        ]));
+
+    $blockedResponse->assertStatus(429);
+});
