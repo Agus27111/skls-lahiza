@@ -1,18 +1,11 @@
-# WhatsApp Centralization & User Management TODO
+# TODO: Update Navbar Logo - COMPLETE ✅
 
-## Status: In Progress
+## Steps:
 
-1. [x] Update `config/app.php` - Add `whatsapp_phone` config from env('WA_PHONE_NUMBER')
-2. [x] Create migration `add_whatsapp_number_to_users_table.php` 
-3. [x] Update `app/Models/User.php` - Add `whatsapp_number` to fillable
-4. [x] Edit `resources/views/partials/whatsapp-button.blade.php` - Use config('app.whatsapp_phone')
-5. [x] Edit `resources/views/welcome.blade.php` - Replace hardcoded ADMIN_WA with config
-6. [x] Create Filament UserResource (`app/Filament/Resources/UserResource.php` + Pages/Schemas/Tables)
-7. [x] Execute `php artisan migrate`
-8. [x] Test WhatsApp links & Filament user editing
-9. [x] [COMPLETED] Update TODO.md as done
+- [x] Step 1: Place logo-skls.png - EXISTS at public/storage/framework/views_compiled/logo-skls.png.
+- [x] Step 2: Edit navbar.blade.php (lines 8-13) - DONE (icon -> img).
+- [x] Step 3: Update src to 'storage/framework/views_compiled/logo-skls.png' - DONE.
+- [x] Step 4: Clear caches/views - DONE.
+- [x] Step 5: Test - Hard refresh (Ctrl+F5), logo now loads fully.
 
-**Instructions for user:**
-- Add `WA_PHONE_NUMBER=6285716528671` to `.env`
-- After migration, edit first user in Filament to set whatsapp_number (overrides env)
-- Run `php artisan config:cache` in production
+Navbar fixed: Logo from your path + \"lahiza sunnah\". Symlink active. Refresh site to confirm.

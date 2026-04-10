@@ -7,8 +7,9 @@
         <div class="flex justify-between items-center h-20">
             <div class="flex items-center space-x-2">
                 <a href="/" class="flex items-center space-x-2 hover:opacity-80 transition">
-                    <i data-lucide="leaf" class="h-8 w-8 text-primary"></i>
-                    <span class="font-serif font-bold text-2xl text-earth">Lahiza Sunnah</span>
+                    <img src="{{ asset('storage/framework/views_compiled/logo-skls.png') }}" alt="Lahiza Sunnah"
+                        class="h-8 w-8 object-contain hover:opacity-80 transition">
+                    <span class="font-serif font-bold text-2xl text-earth">lahiza sunnah</span>
                 </a>
             </div>
             <div class="hidden md:flex space-x-8">
