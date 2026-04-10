@@ -57,6 +57,6 @@ class ArticlesTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->defaultSort('updated_at', 'desc');
     }
 }

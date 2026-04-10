@@ -53,6 +53,6 @@ class PhotoDocumentationsTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->defaultSort('updated_at', 'desc');
     }
 }

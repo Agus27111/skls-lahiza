@@ -22,7 +22,23 @@ class SchoolUnitsTable
                     ->searchable(),
                 TextColumn::make('featured_programs_list')
                     ->label('Program Unggulan')
-                    ->formatStateUsing(fn (array $state): string => implode(' | ', $state))
+                    ->formatStateUsing(function (mixed $state): string {
+                        if (blank($state)) {
+                            return '-';
+                        }
+
+                        if (is_array($state)) {
+                            return implode(' | ', $state);
+                        }
+
+                        $decodedState = json_decode($state, true);
+
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($decodedState)) {
+                            return implode(' | ', $decodedState);
+                        }
+
+                        return (string) $state;
+                    })
                     ->limit(60),
                 TextColumn::make('max_quota')
                     ->numeric()
