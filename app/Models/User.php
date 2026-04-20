@@ -8,10 +8,11 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'whatsapp_number'])]
+#[Fillable(['name', 'email', 'password', 'whatsapp_number', 'school_id'])]
 
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
@@ -37,5 +38,10 @@ class User extends Authenticatable implements FilamentUser
         // Add your authorization logic here if needed.
         // For example, checking if the user has a specific role or email.
         return true;
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
     }
 }

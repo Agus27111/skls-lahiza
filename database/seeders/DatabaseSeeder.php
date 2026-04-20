@@ -5,10 +5,12 @@ namespace Database\Seeders;
 use App\Models\Announcement;
 use App\Models\Article;
 use App\Models\PpdbRegistration;
+use App\Models\School;
 use App\Models\SchoolUnit;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Models\VideoDocumentation;
+use App\Support\Tenant;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -21,14 +23,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(SchoolSeeder::class);
+
+        $schoolId = Tenant::schoolId() ?? School::query()->value('id');
+
         // Create admin user
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            'school_id' => $schoolId,
         ]);
 
         // Create additional users
-        User::factory(5)->create();
+        User::factory(5)->create(['school_id' => $schoolId]);
 
         $this->call(HeroSectionSeeder::class);
         $this->call(AboutPageSeeder::class);
