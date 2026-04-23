@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class School extends Model
 {
@@ -16,6 +18,10 @@ class School extends Model
         'logo',
         'address',
         'phone',
+        'primary_color',
+        'secondary_color',
+        'font_sans',
+        'filament_primary',
         'is_active',
     ];
 
@@ -50,5 +56,21 @@ class School extends Model
     {
         return $this->hasMany(Announcement::class);
     }
-}
 
+    public function getLogoUrlAttribute(): ?string
+    {
+        if (blank($this->logo)) {
+            return null;
+        }
+
+        if (Str::startsWith($this->logo, ['http://', 'https://'])) {
+            return $this->logo;
+        }
+
+        if (Str::startsWith($this->logo, ['/storage/', 'storage/'])) {
+            return asset(ltrim($this->logo, '/'));
+        }
+
+        return Storage::disk('public')->url($this->logo);
+    }
+}

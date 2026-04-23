@@ -3,12 +3,12 @@
 @endphp
 
 <footer class="bg-stone-900 text-stone-400 py-12 border-t-4 border-primary no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <x-ui.container>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="col-span-1 md:col-span-2">
                 <div class="flex items-center space-x-2 mb-4">
                     <i data-lucide="leaf" class="h-6 w-6 text-primaryLight"></i>
-                    <span class="font-serif font-bold text-xl text-white">Lahiza Sunnah</span>
+                    <span class="font-serif font-bold text-xl text-white">{{ $currentSchool?->name ?? 'Lahiza Sunnah' }}</span>
                 </div>
                 <p class="mb-4 max-w-sm">
                     Mendidik anak sesuai fitrah, membangun karakter Nabawiyah melalui kedekatan dengan alam,
@@ -29,11 +29,11 @@
                 <ul class="space-y-2 text-sm">
                     <li class="flex items-start gap-2">
                         <i data-lucide="map-pin" class="w-4 h-4 shrink-0 mt-1"></i>
-                        Karangmulya, Kandanghaur, Kabupaten Indramayu, Jawa Barat, Indonesia.
+                        {{ $currentSchool?->address ?? 'Karangmulya, Kandanghaur, Kabupaten Indramayu, Jawa Barat, Indonesia.' }}
                     </li>
                     <li class="flex items-center gap-2">
                         <i data-lucide="phone" class="w-4 h-4"></i>
-                        +62 812 3456 7890
+                        {{ $currentSchool?->phone ?? '+62 812 3456 7890' }}
                     </li>
                     <li class="flex items-center gap-2">
                         <i data-lucide="mail" class="w-4 h-4"></i>
@@ -61,5 +61,5 @@
                 Developed by Ahza Digital
             </a>
         </div>
-    </div>
+    </x-ui.container>
 </footer>

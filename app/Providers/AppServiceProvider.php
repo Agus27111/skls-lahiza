@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\HeroSection;
+use App\Support\SchoolContext;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -32,16 +33,20 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(20)->by($phone !== '' ? "{$phone}|{$ipAddress}" : $ipAddress);
         });
 
-        $activeHeroSection = null;
+        View::composer('*', function ($view): void {
+            $activeHeroSection = null;
 
-        if (Schema::hasTable('hero_sections')) {
-            try {
-                $activeHeroSection = HeroSection::active()->latest('updated_at')->first();
-            } catch (\Throwable) {
-                $activeHeroSection = null;
+            if (Schema::hasTable('hero_sections')) {
+                try {
+                    $activeHeroSection = HeroSection::active()->latest('updated_at')->first();
+                } catch (\Throwable) {
+                    $activeHeroSection = null;
+                }
             }
-        }
 
-        View::share('activeHeroSection', $activeHeroSection);
+            $view->with('activeHeroSection', $activeHeroSection);
+            $view->with('currentSchool', SchoolContext::current());
+            $view->with('designTokens', SchoolContext::tokens());
+        });
     }
 }

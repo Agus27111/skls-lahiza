@@ -3,13 +3,11 @@
 @endphp
 
 <nav class="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-40 transition-all no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <x-ui.container>
         <div class="flex justify-between items-center h-20">
             <div class="flex items-center space-x-2">
                 <a href="/" class="flex items-center space-x-2 hover:opacity-80 transition">
-                    <img src="{{ asset('storage/framework/views_compiled/logo-skls.png') }}" alt="Lahiza Sunnah"
-                        class="h-8 w-8 object-contain hover:opacity-80 transition">
-                    <span class="font-serif font-bold text-2xl text-earth">lahiza sunnah</span>
+                    <x-ui.logo />
                 </a>
             </div>
             <div class="hidden md:flex space-x-8">
@@ -24,11 +22,10 @@
             </div>
             @if ($isPpdbActive)
                 <div class="hidden md:flex">
-                    <a href="/#ppdb"
-                        class="bg-primary hover:bg-earth text-white px-6 py-2.5 rounded-full font-medium transition shadow-lg shadow-primary/30 flex items-center gap-2">
+                    <x-ui.button href="/#ppdb" class="hover:bg-earth">
                         <i data-lucide="clipboard-signature" class="w-5 h-5"></i>
                         Daftar PPDB
-                    </a>
+                    </x-ui.button>
                 </div>
             @endif
             <div class="md:hidden flex items-center">
@@ -38,7 +35,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </x-ui.container>
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-stone-100">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <a href="/" class="block px-3 py-2 text-stone-600 font-medium">Beranda</a>

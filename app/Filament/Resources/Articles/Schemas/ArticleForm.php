@@ -2,9 +2,15 @@
 
 namespace App\Filament\Resources\Articles\Schemas;
 
-use Illuminate\Support\Facades\Schema;
-
-
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 class ArticleForm
 {
     public static function configure(Schema $schema): Schema
@@ -13,7 +19,6 @@ class ArticleForm
             ->components([
                 Section::make('Informasi Dasar')
                     ->description('Judul dan metadata artikel')
-                    ->columns(2)
                     ->collapsible()
                     ->schema([
                         TextInput::make('title')
@@ -33,8 +38,7 @@ class ArticleForm
                                 'Tips' => 'Tips',
                                 'Nurture' => 'Nurture',
                             ]),
-                    ]),
-
+                    ])->columnSpanFull(),
                 Section::make('Konten')
                     ->description('Isi artikel dan gambar')
                     ->collapsible()
@@ -55,8 +59,7 @@ class ArticleForm
                             ->disk('public')
                             ->directory('articles')
                             ->columnSpanFull(),
-                    ]),
-
+                    ])->columnSpanFull(),
                 Section::make('Penulis & Publikasi')
                     ->description('Informasi penulis dan status publikasi')
                     ->columns(2)

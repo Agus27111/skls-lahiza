@@ -16,6 +16,9 @@ class SchoolSeeder extends Seeder
             $school = School::query()->create([
                 'name' => 'Default School',
                 'domain' => config('app.url') ? parse_url(config('app.url'), PHP_URL_HOST) : null,
+                'primary_color' => '#15803d',
+                'secondary_color' => '#d97706',
+                'font_sans' => "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif",
                 'is_active' => true,
             ]);
         }
@@ -23,4 +26,3 @@ class SchoolSeeder extends Seeder
         Tenant::setSchoolId((int) $school->getKey());
     }
 }
-
